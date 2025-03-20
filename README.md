@@ -2,7 +2,7 @@
 
 ## Parts
 - DC Motor (without encoding) 2x
-- IMU (GY 521)
+- IMU (GY 521) for orientation
 - ESP32
 - LIPO 3.7V
 - DC-DC converter (for 3.7V to 5V or 9V for motors)

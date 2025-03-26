@@ -5,7 +5,7 @@
 - IMU (GY 521)
 - ESP32
 - LIPO 3.7V (9V block for now)
-- DC-DC converter (for 3.7V to 5V or 9V for motors)
+- DC-DC converter (for 3.7V to 5V or 9V for motors) (atm from 9V to 5V)
 - tb6612fng (motor driver)
 - Cables
 

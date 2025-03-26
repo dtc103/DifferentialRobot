@@ -20,9 +20,28 @@ What, if we have 2 motors for our differential wheled robot, but their speed is 
 We need to figure out a control mechanic to align both motors, such that we are able to drive straight forward or make turns as intended.
 For that we use a PID controller to adjust the motor speed, to align with the given yaw, that the GY521 sensor is sensing
 
+<img src="res/hardware_testing.jpg" width="400"/>  
+
+First testing of sensors and motors  
+
+After making sure all the sensors are working as intended and that the motors rotate as intended for the yaw change, it was time to assemble everything on the robot.
+
+<img src="res/ReadyAssembled.jpg" width="400"/> 
+
+The motors seem to be a little bit challenged by the weight and need a slight push. I think reducing the weight might lead to the fully designated beahviour.  
+Contrary to my believe of just using the PD values of the PD controller, I needed the I term to compensate for the weak motors. 
+
+The next step in line is to make the whole robot more weight efficient and hope for a better performance.
+
+### Second Goal
+Idea: Use MPC to drive a straight line, but drive around obstacles automatically and go back to the straight line afterwards
 
 ## Ideas
 Here are ideas that come up when I am sleeping or in random moments
 - IR LED for possible camera tracking
 - Magnetometer for more precise direction control
 - Kalman Filter for multi sensor integration
+- Motors are a little bit too weak at the moment. Try to decrease weight
+    - Less infill in model
+    - decrease tip length
+    - overhaul routing to save some weight for the wires

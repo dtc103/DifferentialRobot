@@ -4,7 +4,7 @@
 - DC Motor (without postition encoding) 2x (I took the motors out of old gamepads, that had a rumble feature)
 - IMU (GY 521)
 - ESP32
-- LIPO 3.7V
+- LIPO 3.7V (9V block for now)
 - DC-DC converter (for 3.7V to 5V or 9V for motors)
 - tb6612fng (motor driver)
 - Cables

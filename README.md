@@ -45,3 +45,5 @@ Here are ideas that come up when I am sleeping or in random moments
     - Less infill in model
     - decrease tip length
     - overhaul routing to save some weight for the wires
+- Headlight would be cool
+- Add sound sensor around robot for object detection

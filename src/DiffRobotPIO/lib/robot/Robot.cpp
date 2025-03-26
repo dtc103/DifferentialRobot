@@ -35,7 +35,7 @@ void DifferentialRobot::init(){
 
     this->yaw = (int)read_yaw();
 
-    this->pid = PID(1.0, 0.0, 0.1, (float)this->yaw);
+    this->pid = PID(4, 1.5, 3.0, (float)this->yaw);
 
     this->m1 = new Motor(DifferentialRobot::LEFT_MOTOR_PIN_IN1, DifferentialRobot::LEFT_MOTOR_PIN_IN2, DifferentialRobot::LEFT_MOTOR_PIN_PWM, 1, DifferentialRobot::STANDBY_PIN);
     this->m2 = new Motor(DifferentialRobot::RIGHT_MOTOR_PIN_IN1, DifferentialRobot::RIGHT_MOTOR_PIN_IN2, DifferentialRobot::RIGHT_MOTOR_PIN_PWM, 1, DifferentialRobot::STANDBY_PIN);

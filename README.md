@@ -9,7 +9,7 @@
 - tb6612fng (motor driver)
 - Cables
 
-## Software
+## Libraries
 - Micro-ROS
 - jrowbergs Mpu6050 library
 - SparkFun TB6612FNG library

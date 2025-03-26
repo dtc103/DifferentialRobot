@@ -8,6 +8,7 @@
 - DC-DC converter (for 3.7V to 5V or 9V for motors) (atm from 9V to 5V)
 - tb6612fng (motor driver)
 - Cables
+- 3D model (files can be found in /res folder)
 
 ## Libraries
 - Micro-ROS

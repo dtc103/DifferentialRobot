@@ -75,6 +75,8 @@ StyleCopReport.xml
 *.ilk
 *.meta
 *.obj
+# Keep this robot object file
+!DifferentialWheeledRobotBig v1.obj
 *.iobj
 *.pch
 *.pdb

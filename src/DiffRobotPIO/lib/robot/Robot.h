@@ -4,8 +4,18 @@
 #include <I2Cdev.h>
 #include <MPU6050_6Axis_MotionApps612.h>
 #include <Wire.h>
-#include <PID.h>
 #include <SparkFun_TB6612.h>
+
+#include <Controller.h>
+#include <PID.h>
+#include <StanleyController.h>
+#include <MPC.h>
+
+enum ControlMode {
+    PID_MODE     = 0,
+    STANLEY_MODE = 1,
+    MPC_MODE     = 2
+};
 
 class DifferentialRobot{
     public:
@@ -39,8 +49,12 @@ class DifferentialRobot{
         void set_status_lights(bool);
 
         float read_yaw();
+        float read_yaw_rate();
         void set_yaw(int);
         int get_yaw();
+
+        void set_control_mode(int mode);
+        int get_control_mode();
         
         void error();
         void emergency_stop();
@@ -48,7 +62,7 @@ class DifferentialRobot{
     private:
         int left_motor_vel = 0;
         int right_motor_vel = 0;
-        int cruising_speed = 230; //to leave some space for turning (speed between 0 and 255)
+        int cruising_speed = 150; // speed between 0 and 255
         int direction = 0; //0=stop, 1=forward, -1=backward
 
         Motor* m1;
@@ -64,7 +78,15 @@ class DifferentialRobot{
 
         MPU6050 mpu;
 
-        PID pid;
+        // Controllers
+        PID pid_controller;
+        StanleyController stanley_controller;
+        MPC mpc_controller;
+        Controller* active_controller;
+        ControlMode control_mode;
+
+        // Timing for dt computation
+        unsigned long last_update_time = 0;
 };
 
 

@@ -24,6 +24,22 @@ void PID::set_d_gain(float d_gain){
     this->d_gain = d_gain;
 }
 
+float PID::compute_from_error(float error, float dt_ms){
+    float p_value = error;
+
+    this->integral += (error * dt_ms);
+    if(this->integral > (float)PID::MAX_INTEGRAL_VALUE){
+        this->integral = (float)PID::MAX_INTEGRAL_VALUE;
+    }else if(this->integral < (float)(-PID::MAX_INTEGRAL_VALUE)){
+        this->integral = (float)(-PID::MAX_INTEGRAL_VALUE);
+    }
+
+    float derivative = (error - this->prev_error) / dt_ms;
+    this->prev_error = error;
+
+    return this->p_gain * p_value + this->i_gain * this->integral + this->d_gain * derivative;
+}
+
 float PID::update(float current_value){
     float curr_time = millis();
     float dt = curr_time - last_time_update;
@@ -37,19 +53,25 @@ float PID::update(float current_value){
         error += 360.0;
     }
 
-    float p_value = error;
+    return compute_from_error(error, dt);
+}
 
-    this->integral += (error * dt);
-    if(this->integral > (float)PID::MAX_INTEGRAL_VALUE){
-        this->integral = (float)PID::MAX_INTEGRAL_VALUE;
-    }else if(this->integral < (float)(-PID::MAX_INTEGRAL_VALUE)){
-        this->integral = (float)(-PID::MAX_INTEGRAL_VALUE);
+float PID::compute(const ControllerInput& input){
+    // Use target_yaw as setpoint, current_yaw as measurement
+    float error = input.target_yaw - input.current_yaw;
+
+    // Wrap error for circular angles
+    if(error > 180.0f){
+        error -= 360.0f;
+    }else if(error < -180.0f){
+        error += 360.0f;
     }
 
-    float derivative = (error - this->prev_error) / dt;
-    this->prev_error = error;
+    // Convert dt from seconds to milliseconds to match existing gain tuning
+    float dt_ms = input.dt * 1000.0f;
+    if(dt_ms < 0.001f) dt_ms = 1.0f; // guard against zero/negative dt
 
-    return this->p_gain * p_value + this->i_gain * this->integral + this->d_gain * derivative;
+    return compute_from_error(error, dt_ms);
 }
 
 void PID::new_set_point(float set_point){
@@ -60,4 +82,3 @@ void PID::reset(){
     this->integral = 0.0;
     this->prev_error = 0.0;
 }
-

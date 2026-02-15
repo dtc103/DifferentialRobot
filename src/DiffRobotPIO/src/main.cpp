@@ -19,10 +19,12 @@ rcl_allocator_t allocator;
 rcl_node_t node;
 rcl_subscription_t yaw_sub;
 rcl_subscription_t direction_sub;
+rcl_subscription_t control_mode_sub;
 rcl_timer_t direction_heartbeat_timer;
 
 std_msgs__msg__Int32 yaw_msg;
 std_msgs__msg__Int32 direction_msg;
+std_msgs__msg__Int32 control_mode_msg;
 
 void yaw_callback(const void* in_msg){
     const std_msgs__msg__Int32* msg = (const std_msgs__msg__Int32*) in_msg;
@@ -48,6 +50,12 @@ void direction_callback(const void* in_msg){
     if(msg->data == -1){
         robot.backward();
     }
+}
+
+void control_mode_callback(const void* in_msg){
+    const std_msgs__msg__Int32* msg = (const std_msgs__msg__Int32*) in_msg;
+    // 0 = PID, 1 = Stanley, 2 = MPC
+    robot.set_control_mode(msg->data);
 }
 
 void direction_heartbeat_callback(rcl_timer_t *timer, int64_t last_call_time){
@@ -89,11 +97,16 @@ void setup() {
         robot.error();
     }
 
+    if(rclc_subscription_init_default(&control_mode_sub, &node, ROSIDL_GET_MSG_TYPE_SUPPORT(std_msgs, msg, Int32), "robot_control_mode") != RCL_RET_OK){
+        robot.error();
+    }
+
     if(rclc_timer_init_default(&direction_heartbeat_timer, &support, RCL_MS_TO_NS(100), direction_heartbeat_callback) != RCL_RET_OK){
         robot.error();
     }
 
-    if(rclc_executor_init(&executor, &support.context, 3, &allocator) != RCL_RET_OK){
+    // 4 handles: 3 subscriptions + 1 timer
+    if(rclc_executor_init(&executor, &support.context, 4, &allocator) != RCL_RET_OK){
         robot.error();
     }
 
@@ -102,6 +115,10 @@ void setup() {
     }
 
     if(rclc_executor_add_subscription(&executor, &direction_sub, &direction_msg, &direction_callback, ON_NEW_DATA) != RCL_RET_OK){
+        robot.error();
+    }
+
+    if(rclc_executor_add_subscription(&executor, &control_mode_sub, &control_mode_msg, &control_mode_callback, ON_NEW_DATA) != RCL_RET_OK){
         robot.error();
     }
 
